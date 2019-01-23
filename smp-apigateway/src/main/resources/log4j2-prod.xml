@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF">
+    <properties>
+        <!-- <property name="basePath">系统日志位置</property> -->
+        <property name="basePath">/imi/blockchain/logs</property>
+        <property name="LOG_HOME">${basePath}/smp-apigateway</property>
+        <property name="LOG_FILE_NAME">smp-apigateway</property>
+    </properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
+            <!--<PatternLayout pattern="%clr{%d}{faint} [%clr{%-5p} %clr{%X{X-B3-TraceId}}{magenta},%X{X-B3-SpanId},%X{X-Span-Export}] [%clr{%thread}{cyan}] %c:%L - %m%n%clr{%wEx}"/>-->
+            <PatternLayout pattern="%d{MM-dd HH:mm:ss.SSS} [%t] %X{X-B3-TraceId} %X{X-B3-SpanId} %X{X-B3-ParentSpanId} %-5level %logger{36} %L %M - %msg%n" />
+        </Console>
+        <!--<RollingRandomAccessFile name="DEBUG_FILE"  fileName="${LOG_HOME}/${DEBUG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log"-->
+                                 <!--filePattern="${LOG_HOME}/${DEBUG_FILE_NAME}.%d{yyyy-MM-dd-HH}.log">-->
+            <!--<PatternLayout pattern="%d [%-5p %X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-Span-Export}] [%thread] %c:%L - %m%n"/>-->
+            <!--<Policies>-->
+                <!--<TimeBasedTriggeringPolicy interval="1" modulate="true" />-->
+            <!--</Policies>-->
+        <!--</RollingRandomAccessFile>-->
+        <RollingRandomAccessFile name="LOG_FILE" immediateFlush="true"  fileName="${LOG_HOME}/${LOG_FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/${LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log" append="true">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <Pattern>[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%X{X-B3-TraceId}] [%X{X-B3-SpanId}] [%X{X-B3-ParentSpanId}] [%-5level] [%class{36}] [%L] [%M] [%msg%xEx]%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <!--<TimeBasedTriggeringPolicy modulate="true" interval="24"/>-->
+                <TimeBasedTriggeringPolicy interval="1" />
+            </Policies>
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="${LOG_FILE_NAME}-*.log">
+                        <IfLastModified age="60d" />
+                        <IfAny>
+                            <IfAccumulatedFileSize exceeds="100 GB" />
+                            <IfAccumulatedFileCount exceeds="100" />
+                        </IfAny>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+    <Loggers>
+
+        <Logger name="org.springframework.test" level="ERROR" />
+        <Logger name="org.springframework.boot.autoconfigure" level="info" />
+        <Logger name="org.springframework.core.env" level="info" />
+        <Logger name="org.springframework.beans" level="info" />
+        <logger name="com.xingyun.zuul.apigateway" level="debug" additivity="false"  includeLocation="true">
+            <!--<appender-ref ref="Console" />-->
+            <appender-ref ref="LOG_FILE"/>
+        </logger>
+
+        <root level="info" includeLocation="true">
+            <!--<appender-ref ref="Console" />-->
+            <appender-ref ref="LOG_FILE"/>
+        </root>
+
+    </Loggers>
+</Configuration>

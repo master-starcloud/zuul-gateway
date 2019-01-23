@@ -1,0 +1,4 @@
+rootProject.name = 'zuul-gateway'
+
+include 'smp-apigateway'
+

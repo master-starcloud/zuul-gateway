@@ -1,0 +1,41 @@
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8083/eureka/
+#  instance:
+#    preferIpAddress: true
+
+
+server:
+  port: 8048
+#feign:
+#  hystrix:
+#    enabled: true
+
+##ribbon超时时间设置 socket超时设置
+#ribbon:
+#  ReadTimeout: 30000
+#  ConnectTimeout: 30000
+#  MaxAutoRetries: 0
+#  MaxAutoRetriesNextServer: 1
+
+#hystrix 超时时间
+#hystrix:
+#  command:
+#      default:
+#        execution:
+#          isolation:
+#            thread:
+#              timeoutInMilliseconds: 120000
+
+
+spring:
+  application:
+    name: smp-apigateway
+
+logging:
+  config: classpath:log4j2-dev.xml
+
+#eureka.instance.lease-renewal-interval-in-seconds: 10
+#eureka.instance.lease-expiration-duration-in-seconds: 6
+

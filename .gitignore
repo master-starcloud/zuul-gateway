@@ -6,3 +6,4 @@ target
 *.iml
 *.resources.prefs
 build
+logs/
